@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package proto.v1;
+
+service FetcherService {
+  rpc GetSupportedPatterns(GetSupportedPatternsRequest) returns (GetSupportedPatternsResponse);
+  rpc Fetch(FetchRequest) returns (FetchResponse);
+}
+
+message GetSupportedPatternsRequest {}
+
+message GetSupportedPatternsResponse {
+  repeated string patterns = 1;
+}
+
+message FetchRequest {
+  string url = 1;
+}
+
+message FetchResponse {
+  string title = 1;
+  repeated string content = 2;
+}
