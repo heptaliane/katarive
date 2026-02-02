@@ -3,8 +3,24 @@ syntax = "proto3";
 package proto.v1;
 
 service SpeakerService {
+  rpc GetPluginMetadata(GetPluginMetadataRequest) returns (GetPluginMetadataResponse);
   rpc Speak(SpeakRequest) returns (stream SpeakResponse);
   rpc Control(ControlRequest) returns (ControlResponse);
+}
+
+message GetPluginMetadataRequest {}
+
+message GetPluginMetadataResponse {
+  string name = 1;
+  string version = 2;
+  repeated Option options = 3;
+}
+
+message Option {
+  string id = 1;
+  string label = 2;
+  string description = 3;
+  string default_value = 4;
 }
 
 message SpeakRequest {
