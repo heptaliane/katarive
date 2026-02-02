@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package proto.v1;
+
+service SpeakerService {
+  rpc Speak(SpeakRequest) returns (stream SpeakResponse);
+  rpc Control(ControlRequest) returns (ControlResponse);
+}
+
+message SpeakRequest {
+  repeated string lines = 1;
+  map<string, string> options = 2;
+}
+
+message SpeakResponse {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_PLAYING = 1;
+    STATUS_PAUSED = 2;
+    STATUS_COMPLETED = 3;
+    STATUS_ERROR = 4;
+  }
+
+  int32 current_line = 1;
+  Status status = 2;
+  string error = 3;
+}
+
+message ControlRequest {
+  enum Command {
+    COMMAND_UNSPECIFIED = 0;
+    COMMAND_PAUSE = 1;
+    COMMAND_RESUME = 2;
+    COMMAND_STOP = 3;
+  }
+
+  Command command = 1;
+}
+
+message ControlResponse {
+  bool success = 1;
+}
