@@ -25,17 +25,19 @@ pub fn header(props: &HeaderProps) -> Html {
 
     html! {
         <header>
-            <input
-                type="text"
-                placeholder="Enter document URL ..."
-                oninput={handle_change}
-                value={(*url).clone()}
-            />
-            <button
-                onclick={handle_click}
-            >
-                {"Fetch"}
-            </button>
+            <div class="header-inner">
+                <input
+                    type="text"
+                    placeholder="Enter document URL ..."
+                    oninput={handle_change}
+                    value={(*url).clone()}
+                />
+                <button
+                    onclick={handle_click}
+                >
+                    {"Fetch"}
+                </button>
+            </div>
         </header>
     }
 }

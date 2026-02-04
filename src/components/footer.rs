@@ -15,17 +15,19 @@ pub fn footer(props: &FooterProps) -> Html {
 
     html! {
         <footer>
-            <button
-                onclick={handle_click}
-            >
-                {
-                    if props.is_playing {
-                        "Pause"
-                    } else {
-                        "Resume"
+            <div class="footer-inner">
+                <button
+                    onclick={handle_click}
+                >
+                    {
+                        if props.is_playing {
+                            "Pause"
+                        } else {
+                            "Resume"
+                        }
                     }
-                }
-            </button>
+                </button>
+            </div>
         </footer>
     }
 }
