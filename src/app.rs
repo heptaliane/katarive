@@ -20,14 +20,16 @@ pub fn app() -> Html {
     };
 
     html! {
-        <main>
+        <div class="container">
             <header::Header
                 on_fetch={handle_fetch}
             />
+            <main>
+            </main>
             <footer::Footer
                 is_playing={*is_playing}
                 on_toggle={handle_playing_toggle}
             />
-        </main>
+        </div>
     }
 }
