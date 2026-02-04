@@ -5,10 +5,13 @@ use crate::components::{footer, header};
 #[function_component(App)]
 pub fn app() -> Html {
     let is_playing = use_state(|| false);
+    let lines = use_state(Vec::<String>::new);
 
     let handle_fetch = {
-        Callback::from(move |_url: String| {
-            // TODO: Implement this
+        let lines = lines.clone();
+        Callback::from(move |url: String| {
+            // TODO: Set fetched data to lines
+            lines.set(vec![url]);
         })
     };
     let handle_playing_toggle = {
@@ -25,6 +28,9 @@ pub fn app() -> Html {
                 on_fetch={handle_fetch}
             />
             <main>
+                <article>
+                {for (*lines).iter().map(|line| html!{<p>{line}</p>})}
+                </article>
             </main>
             <footer::Footer
                 is_playing={*is_playing}
