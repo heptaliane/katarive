@@ -1,5 +1,6 @@
 mod app;
 mod components;
+mod tauri;
 
 use app::App;
 
