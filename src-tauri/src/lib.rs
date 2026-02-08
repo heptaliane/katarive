@@ -1,4 +1,6 @@
 mod commands;
+mod fetcher_manager;
+mod pb;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
