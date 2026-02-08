@@ -7,16 +7,17 @@ use crate::state::SharedState;
 pub async fn fetch_document(
     url: String,
     state: tauri::State<'_, SharedState>,
-) -> Result<(), String> {
+) -> Result<Document, String> {
     let mut state = state.lock().await;
     if let Some(fetcher) = state.fetcher_manager.find_client(&url) {
         match fetcher.fetch(&url).await {
             Ok(res) => {
-                state.document = Document {
+                let document = Document {
                     title: res.title,
                     body: res.content,
                 };
-                Ok(())
+                state.document = document.clone();
+                Ok(document)
             }
             Err(err) => {
                 log::warn!("Failed to fetch document: {:?}", err.to_string());
