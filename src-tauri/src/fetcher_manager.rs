@@ -5,7 +5,7 @@ use tonic::transport::Channel;
 use crate::pb::v1::fetcher_service_client::FetcherServiceClient;
 use crate::pb::v1::{FetchRequest, FetchResponse, GetSupportedPatternsRequest};
 
-struct Fetcher {
+pub struct Fetcher {
     client: FetcherServiceClient<Channel>,
     patterns: Vec<Regex>,
 }
