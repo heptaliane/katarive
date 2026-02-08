@@ -1,6 +1,7 @@
 use yew::prelude::*;
 
 use crate::components::{footer, header};
+use crate::tauri::fetch_document;
 
 #[function_component(App)]
 pub fn app() -> Html {
@@ -10,8 +11,17 @@ pub fn app() -> Html {
     let handle_fetch = {
         let lines = lines.clone();
         Callback::from(move |url: String| {
-            // TODO: Set fetched data to lines
-            lines.set(vec![url]);
+            let lines = lines.clone();
+            wasm_bindgen_futures::spawn_local(async move {
+                match fetch_document(&url).await {
+                    Ok(docs) => {
+                        lines.set(docs.body);
+                    }
+                    Err(err) => {
+                        log::error!("[Error] {:?}", err);
+                    }
+                }
+            });
         })
     };
     let handle_playing_toggle = {

@@ -1,5 +1,5 @@
 use serde::{de::DeserializeOwned, Serialize};
-use serde_wasm_bindgen;
+use shared::document::Document;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -19,4 +19,8 @@ where
     let js_args = serde_wasm_bindgen::to_value(args).map_err(|e| e.to_string())?;
     let res = tauri_invoke(cmd, js_args).await;
     serde_wasm_bindgen::from_value(res).map_err(|e| e.to_string())
+}
+
+pub async fn fetch_document(url: &String) -> Result<Document, String> {
+    invoke::<String, Document>("fetch_document", url).await
 }
