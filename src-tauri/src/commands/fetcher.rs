@@ -1,6 +1,7 @@
 use log;
+use shared::document::Document;
 
-use crate::state::{Document, SharedState};
+use crate::state::SharedState;
 
 #[tauri::command]
 pub async fn fetch_document(
@@ -13,7 +14,7 @@ pub async fn fetch_document(
             Ok(res) => {
                 state.document = Document {
                     title: res.title,
-                    content: res.content,
+                    body: res.content,
                 };
                 Ok(())
             }

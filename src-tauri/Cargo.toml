@@ -30,4 +30,5 @@ tonic = "0.14.3"
 prost = "0.14.3"
 tonic-prost = "0.14.3"
 regex = "1.12.3"
+shared = { version = "0.1.0", path = "../shared" }
 

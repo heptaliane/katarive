@@ -5,3 +5,12 @@ pub struct Document {
     pub title: String,
     pub body: Vec<String>,
 }
+
+impl Default for Document {
+    fn default() -> Self {
+        Self {
+            title: "".to_string(),
+            body: Vec::new(),
+        }
+    }
+}

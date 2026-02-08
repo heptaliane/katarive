@@ -1,3 +1,4 @@
+use shared::document::Document;
 use tokio::sync::Mutex;
 
 mod commands;
@@ -11,7 +12,7 @@ pub fn run() {
     // TODO: Register fetchers
 
     let state = Mutex::new(state::AppState {
-        document: state::Document::default(),
+        document: Document::default(),
         fetcher_manager,
     });
 
