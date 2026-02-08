@@ -15,10 +15,11 @@ pub fn app() -> Html {
             wasm_bindgen_futures::spawn_local(async move {
                 match fetch_document(&url).await {
                     Ok(docs) => {
+                        log::info!("Current document: {:?}", docs.title);
                         lines.set(docs.body);
                     }
                     Err(err) => {
-                        log::error!("[Error] {:?}", err);
+                        log::error!("Failed to fetch document: {:?}", err);
                     }
                 }
             });
