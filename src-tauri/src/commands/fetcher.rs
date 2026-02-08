@@ -1,16 +1,16 @@
 use log;
-use shared::document::Document;
+use shared::document::{Document, FetchDocumentArgs};
 
 use crate::state::SharedState;
 
 #[tauri::command]
 pub async fn fetch_document(
-    url: String,
+    args: FetchDocumentArgs,
     state: tauri::State<'_, SharedState>,
 ) -> Result<Document, String> {
     let mut state = state.lock().await;
-    if let Some(fetcher) = state.fetcher_manager.find_client(&url) {
-        match fetcher.fetch(&url).await {
+    if let Some(fetcher) = state.fetcher_manager.find_client(&args.url) {
+        match fetcher.fetch(&args.url).await {
             Ok(res) => {
                 let document = Document {
                     title: res.title,
@@ -25,6 +25,6 @@ pub async fn fetch_document(
             }
         }
     } else {
-        Err(format!("Unsupported url: '{:?}'", url))
+        Err(format!("Unsupported url: '{:?}'", args.url))
     }
 }

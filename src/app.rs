@@ -13,7 +13,7 @@ pub fn app() -> Html {
         Callback::from(move |url: String| {
             let lines = lines.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                match fetch_document(&url).await {
+                match fetch_document(url).await {
                     Ok(docs) => {
                         log::info!("Current document: {:?}", docs.title);
                         lines.set(docs.body);

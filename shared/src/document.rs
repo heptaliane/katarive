@@ -14,3 +14,8 @@ impl Default for Document {
         }
     }
 }
+
+#[derive(Clone, Deserialize, Serialize)]
+pub struct FetchDocumentArgs {
+    pub url: String,
+}
