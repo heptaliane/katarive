@@ -28,11 +28,11 @@ impl Fetcher {
         })
     }
 
-    pub async fn fetch(&mut self, url: &str) -> Result<FetchResponse, Box<dyn Error>> {
+    pub async fn fetch(&self, url: &str) -> Result<FetchResponse, Box<dyn Error>> {
         let req = FetchRequest {
             url: url.to_string(),
         };
-        let res = self.client.fetch(req).await?;
+        let res = self.client.clone().fetch(req).await?;
         Ok(res.into_inner())
     }
 
