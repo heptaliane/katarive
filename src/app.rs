@@ -1,26 +1,45 @@
+use std::collections::HashMap;
 use yew::prelude::*;
 
 use crate::components::{error_bar, footer, header};
-use crate::tauri::fetch_document;
+use crate::tauri::{fetch_document, pause_speech, resume_speech, start_speech};
 
 #[function_component(App)]
 pub fn app() -> Html {
     let is_playing = use_state(|| false);
     let lines = use_state(Vec::<String>::new);
     let errors = use_state(Vec::<AttrValue>::new);
+    let speaker = use_state(String::new);
+    let speech_options = use_state(HashMap::<String, String>::new);
 
     let handle_fetch = {
         let lines = lines.clone();
         let errors = errors.clone();
+        let speaker = speaker.clone();
+        let speech_options = speech_options.clone();
+
         Callback::from(move |url: String| {
             if !url.is_empty() {
                 let lines = lines.clone();
                 let errors = errors.clone();
+                let speaker = speaker.clone();
+                let speech_options = speech_options.clone();
                 wasm_bindgen_futures::spawn_local(async move {
                     match fetch_document(url).await {
                         Ok(docs) => {
                             log::info!("Current document: {:?}", docs.title);
                             lines.set(docs.body);
+                            wasm_bindgen_futures::spawn_local(async move {
+                                let result =
+                                    start_speech((*speaker).clone(), (*speech_options).clone())
+                                        .await;
+                                if let Err(err) = result {
+                                    log::error!("Failed to start speech: {:?}", err);
+                                    let mut new_errors = (*errors).clone();
+                                    new_errors.push(AttrValue::from(err));
+                                    errors.set(new_errors);
+                                }
+                            })
                         }
                         Err(err) => {
                             log::error!("Failed to fetch document: {:?}", err);
@@ -39,8 +58,27 @@ pub fn app() -> Html {
     };
     let handle_playing_toggle = {
         let is_playing = is_playing.clone();
+        let speaker = speaker.clone();
+        let errors = errors.clone();
 
         Callback::from(move |_| {
+            {
+                let is_playing = is_playing.clone();
+                let speaker = speaker.clone();
+                let errors = errors.clone();
+                wasm_bindgen_futures::spawn_local(async move {
+                    let result = match *is_playing {
+                        true => pause_speech((*speaker).clone()).await,
+                        false => resume_speech((*speaker).clone()).await,
+                    };
+                    if let Err(err) = result {
+                        log::error!("Failed to toggle speech: {:?}", err);
+                        let mut new_errors = (*errors).clone();
+                        new_errors.push(AttrValue::from(err));
+                        errors.set(new_errors);
+                    }
+                });
+            }
             is_playing.set(!*is_playing);
         })
     };

@@ -1,5 +1,7 @@
 use serde::{de::DeserializeOwned, Serialize};
 use shared::document::{Document, FetchDocumentArgs};
+use shared::speaker::{SpeakerControlArgs, SpeakerStartArgs};
+use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -35,4 +37,19 @@ where
 pub async fn fetch_document(url: String) -> Result<Document, String> {
     let args = FetchDocumentArgs { url };
     invoke::<FetchDocumentArgs, Document>("fetch_document", &args).await
+}
+
+pub async fn start_speech(name: String, options: HashMap<String, String>) -> Result<(), String> {
+    let args = SpeakerStartArgs { name, options };
+    invoke::<SpeakerStartArgs, ()>("start_speech", &args).await
+}
+
+pub async fn pause_speech(name: String) -> Result<(), String> {
+    let args = SpeakerControlArgs { name };
+    invoke::<SpeakerControlArgs, ()>("pause_speech", &args).await
+}
+
+pub async fn resume_speech(name: String) -> Result<(), String> {
+    let args = SpeakerControlArgs { name };
+    invoke::<SpeakerControlArgs, ()>("resume_speech", &args).await
 }
