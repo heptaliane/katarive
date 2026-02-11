@@ -8,7 +8,7 @@ pub struct HeaderProps {
 
 #[function_component(Header)]
 pub fn header(props: &HeaderProps) -> Html {
-    let url = use_state(|| String::new());
+    let url = use_state(String::new);
 
     let handle_change = {
         let url = url.clone();
