@@ -4,11 +4,11 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 extern "C" {
-    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"], js_name = invoke)]
-    async fn tauri_invoke(cmd: &str, args: JsValue) -> JsValue;
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"], js_name = invoke, catch)]
+    async fn tauri_invoke(cmd: &str, args: JsValue) -> Result<JsValue, JsValue>;
 
-    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"], js_name = invoke)]
-    async fn tauri_invoke_without_args(cmd: &str) -> JsValue;
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"], js_name = invoke, catch)]
+    async fn tauri_invoke_without_args(cmd: &str) -> Result<JsValue, JsValue>;
 }
 
 #[derive(Serialize)]
@@ -26,7 +26,9 @@ where
 {
     let js_args =
         serde_wasm_bindgen::to_value(&InvokeWrapper { args }).map_err(|e| e.to_string())?;
-    let res = tauri_invoke(cmd, js_args).await;
+    let res = tauri_invoke(cmd, js_args)
+        .await
+        .map_err(|e| e.as_string().expect("Unsupported error type occured"))?;
     serde_wasm_bindgen::from_value(res).map_err(|e| e.to_string())
 }
 
