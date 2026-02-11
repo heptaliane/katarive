@@ -25,6 +25,6 @@ pub async fn fetch_document(
             }
         }
     } else {
-        Err(format!("Unsupported url: '{:?}'", args.url))
+        Err(format!("Unsupported url: {:?}", args.url))
     }
 }
