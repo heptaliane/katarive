@@ -53,6 +53,4 @@ message ControlRequest {
   Command command = 1;
 }
 
-message ControlResponse {
-  bool success = 1;
-}
+message ControlResponse {}

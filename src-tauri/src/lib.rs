@@ -4,6 +4,7 @@ use tokio::sync::Mutex;
 mod commands;
 mod fetcher_manager;
 mod pb;
+mod speaker_manager;
 mod state;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
