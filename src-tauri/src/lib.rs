@@ -9,12 +9,15 @@ mod state;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let fetcher_manager = fetcher_manager::FetcherManager::new();
+    let fm = fetcher_manager::FetcherManager::new();
     // TODO: Register fetchers
+    let sm = speaker_manager::SpeakerManager::new();
+    // TODO: Register speakers
 
     let state = Mutex::new(state::AppState {
+        fetcher_manager: fm,
+        speaker_manager: sm,
         document: Document::default(),
-        fetcher_manager,
     });
 
     tauri::Builder::default()
@@ -25,6 +28,7 @@ pub fn run() {
             commands::fetcher::fetch_document,
             commands::speaker::start_speech,
             commands::speaker::pause_speech,
+            commands::speaker::resume_speech,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
