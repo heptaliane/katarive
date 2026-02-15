@@ -1,4 +1,5 @@
 use shared::document::Document;
+use std::sync::Arc;
 use tokio::sync::Mutex;
 
 use crate::fetcher_manager::FetcherManager;
@@ -10,4 +11,4 @@ pub struct AppState {
     pub document: Document,
 }
 
-pub type SharedState = Mutex<AppState>;
+pub type SharedState = Arc<Mutex<AppState>>;
