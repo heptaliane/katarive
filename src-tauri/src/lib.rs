@@ -1,6 +1,5 @@
 use shared::document::Document;
 use std::sync::Arc;
-use tauri::Manager;
 use tokio::sync::Mutex;
 
 mod commands;
@@ -24,6 +23,7 @@ pub fn run() {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_log::Builder::default().build())
         .manage(state.clone())
         .invoke_handler(tauri::generate_handler![

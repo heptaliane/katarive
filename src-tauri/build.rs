@@ -20,6 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let sidecar_root_dir = prj_root_dir.join("sidecars").join(sidecar);
         let sidecar_build_dir = prj_root_dir.join("target").join("sidecars").join(sidecar);
         let sidecar_out_dir = tauri_root_dir.join("binaries").join(sidecar);
+        fs::create_dir_all(&sidecar_out_dir).unwrap();
         let entries = fs::read_dir(&sidecar_root_dir).expect("Failed to read sidecars");
 
         for entry in entries.filter_map(|e| e.ok()) {
@@ -31,7 +32,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let name = path.file_name().unwrap().to_str().unwrap();
             let target_root_dir = path.canonicalize().unwrap();
             let target_build_dir = sidecar_build_dir.join(name);
-            let target_out_dir = sidecar_out_dir.join(name);
 
             let mut cargo_cmd = Command::new("cargo");
             cargo_cmd
@@ -51,9 +51,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 panic!("Sidecar '{}' build failed", name);
             }
 
-            fs::create_dir_all(&target_out_dir).unwrap();
             let binary_name = format!("{}{}", name, suffix);
-            let target_binary_name = format!("{}-{}{}", name, target, suffix);
+            let binary_filename = format!("{}-{}", name, target);
             let build_path = if target == host {
                 target_build_dir.join(&profile).join(&binary_name)
             } else {
@@ -67,7 +66,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "cargo:warning=Copying sidecar from: {}",
                 build_path.display()
             );
-            fs::copy(&build_path, target_build_dir.join(target_binary_name))
+            fs::copy(&build_path, sidecar_out_dir.join(binary_filename))
                 .expect(&format!("Failed to copy sidecar binary: {}", name));
         }
     }
